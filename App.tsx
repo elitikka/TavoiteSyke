@@ -1,12 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
 import { useState } from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 
 export default function App() {
   const [age, setAge] = useState<string>("")
-  const validAge: number = !isNaN(Number(age)) === true ? Number(age):0
-  const lower: number = (220-validAge)*0.65
-  const upper: number = (220-validAge)*0.85
+
+  // käytetty vähän samaa ideaa kuin web-ohjelmoinnin sovellusprojekti -kurssilla
+  // oma huomio: ks. movie-web-app --> Frontend --> src --> pages --> Signup.jsx
+  const ageRegex = /^\d+$/; 
+
+  // laitetaan aluksi bpm arvot nolliin
+  // arvot muuttuu kun käyttäjä syöttää iän
+  let lower = 0
+  let upper = 0
+
+  if (ageRegex.test(age)) {
+    const ageAsNumber = Number(age)
+
+    /* En lukenut tehtävänantoa kunnolla. Luin, että jos antaa ei-numeerisen arvon, 
+    niin ohjelma antaa nollat, MUTTA vahingossa ajattelin että myös jos käyttäjä antaa nollan,
+    niin ohjelma antaa nollat. Sitten isoille ikänumeroille oli ongelma, että bpm arvot meni negatiiviseksi,
+    niin laitoin siihenkin rajan 150, joskin alempikin raja olisi varmaan ollut ihan realistinen. 
+    Päätin jättää nämä tähän nyt kuitenkin sen sijaan että olisin poistanut.
+    */
+    if (ageAsNumber>= 1 && ageAsNumber <= 150) {
+      lower = (220-ageAsNumber)*0.65
+      upper = (220-ageAsNumber)*0.85
+    } else {
+      lower = 0
+      upper = 0
+    }
+  }
 
   return (
     <View style={styles.container}>
